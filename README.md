@@ -1,4 +1,4 @@
-## KBGNN
+## DisenPOI
 
 This is the pytorch implementation for our WSDM 2023 [paper](https://arxiv.org/abs/2210.16591):
 > Yifang Qin, Yifan Wang, Fang Sun, Wei Ju, Xuyang Hou, Zhe Wang, Jia Cheng, Jun Lei and Ming Zhang(2022). 
