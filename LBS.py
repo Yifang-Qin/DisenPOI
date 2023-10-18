@@ -100,7 +100,7 @@ class CTR(nn.Module):
         geo_feat = self.poi_embed
         dist_weight = torch.exp(-(self.dist_vec ** 2))
         for i in range(self.gcn_num):
-            geo_feat = self.geo_conv[i](geo_feat, self.edge_index, self.adj_weight, dist_weight)
+            geo_feat = self.geo_conv[i](geo_feat, self.edge_index, dist_weight)
             geo_feat = F.leaky_relu(geo_feat)
             geo_feat = F.normalize(geo_feat, dim=-1)
 
@@ -150,14 +150,12 @@ class Geo_GCN(nn.Module):
             if isinstance(w, nn.Linear):
                 nn.init.xavier_uniform_(w.weight)
 
-    def forward(self, x, edge_index, adj_weight, dist_vec):
+    def forward(self, x, edge_index, dist_weight):
         row, col = edge_index
         deg = degree(col, x.size(0), dtype=x.dtype)
         deg_inv_sqrt = deg.pow(-0.5)
         deg_inv_sqrt[deg_inv_sqrt == float('inf')] = 0
         norm = deg_inv_sqrt[row] * deg_inv_sqrt[col]
-
-        dist_weight = torch.exp(-(dist_vec ** 2))
 
         dist_adj = torch.sparse_coo_tensor(edge_index, dist_weight * norm)
         side_embed = torch.sparse.mm(dist_adj, x)
